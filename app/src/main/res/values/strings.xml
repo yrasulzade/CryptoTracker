@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">CryptoTracker</string>
+
+    <string name="error_server_error">Server error</string>
+    <string name="general_error">Something went wrong</string>
+    <string name="min_value">Minimum value</string>
+    <string name="max_value">Maximum value</string>
+    <string name="set_range">Set range</string>
+    <string name="open_history">Open range history</string>
+    <string name="empty_field_warning">Fields cannot be empty</string>
+    <string name="warning_rate_change">%s rate changed</string>
+    <string name="rate_change_description">Your edge rates have changed</string>
+    <string name="max">Max. %f</string>
+    <string name="min">Min. %f</string>
+    <string name="empty_history">Empty History</string>
+</resources>
