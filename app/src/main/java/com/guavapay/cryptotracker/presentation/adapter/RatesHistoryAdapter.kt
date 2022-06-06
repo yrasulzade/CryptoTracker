@@ -1,48 +1,30 @@
 package com.guavapay.cryptotracker.presentation.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.guavapay.cryptotracker.R
 import com.guavapay.cryptotracker.data.database.models.CryptoRange
 import com.guavapay.cryptotracker.databinding.ItemRateHistoryBinding
-import com.guavapay.cryptotracker.domain.model.other.Rate
+import com.guavapay.cryptotracker.presentation.adapter.viewHolder.RateHistoryViewHolder
+import com.guavapay.cryptotracker.presentation.adapter.viewHolder.RateRangeDiffCallback
 
-class RatesHistoryAdapter(
-    private val ranges: ArrayList<CryptoRange?>,
-    private val context: Context
-) : RecyclerView.Adapter<RatesHistoryAdapter.ViewHolder>() {
+class RatesHistoryAdapter : ListAdapter<CryptoRange, RateHistoryViewHolder>(RateRangeDiffCallback) {
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RateHistoryViewHolder {
         val binding: ItemRateHistoryBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context), R.layout.item_rate_history, parent, false
         )
 
-        return ViewHolder(binding, context)
+        return RateHistoryViewHolder(binding, parent.context)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, index: Int) {
-        val range = ranges[index]
+    override fun onBindViewHolder(holder: RateHistoryViewHolder, index: Int) {
+        val range = getItem(index)
 
         holder.binding.apply {
             this.range = range
         }
-    }
-
-    override fun getItemCount(): Int {
-        return ranges.size
-    }
-
-    class ViewHolder(
-        val binding: ItemRateHistoryBinding,
-        val context: Context
-    ) : RecyclerView.ViewHolder(binding.root)
-
-
-    interface OnHolderClickListener {
-        fun onHolderItemClick(item: Rate)
     }
 }

@@ -2,17 +2,14 @@ package com.guavapay.cryptotracker.presentation.base.mvi_base
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.guavapay.cryptotracker.presentation.base.BaseActivity
-import com.guavapay.cryptotracker.presentation.util.ErrorHandler
 
 abstract class BaseMviFragment<INTENT : ViewIntent, STATE : ViewState, T : ViewDataBinding,
         VM : BaseViewModel<INTENT, STATE>> :
@@ -44,7 +41,6 @@ abstract class BaseMviFragment<INTENT : ViewIntent, STATE : ViewState, T : ViewD
     ): View? {
 
         if (mRootView == null) {
-            Log.d(TAG, "onCreateView: ------------")
             viewDataBinding = DataBindingUtil.inflate(inflater, getLayoutResId(), container, false)
             mRootView = viewDataBinding.root
         }
@@ -58,19 +54,7 @@ abstract class BaseMviFragment<INTENT : ViewIntent, STATE : ViewState, T : ViewD
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d(TAG, "onCreate: ")
         mViewModel = getViewModel()
-
-        mViewModel?.getErrorLiveData()?.observe(this) { throwable ->
-            hideLoading()
-            try {
-                val errorHandler = ErrorHandler(mActivity)
-                val message: String = errorHandler.handleError(throwable)
-                mActivity.showMessage(message)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
 
         mViewModel?.state?.observe(this) {
             viewState = it
@@ -82,7 +66,6 @@ abstract class BaseMviFragment<INTENT : ViewIntent, STATE : ViewState, T : ViewD
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.lifecycleOwner = this
         viewDataBinding.executePendingBindings()
-        Log.d(TAG, "onViewCreated: ")
 
         mViewModel?.loadingState?.observe(
             viewLifecycleOwner
@@ -108,10 +91,6 @@ abstract class BaseMviFragment<INTENT : ViewIntent, STATE : ViewState, T : ViewD
 
     private fun hideLoading() {
         mActivity.hideLoading()
-    }
-
-    companion object {
-        private const val TAG = "Base**"
     }
 
     @LayoutRes

@@ -16,7 +16,8 @@ import com.guavapay.cryptotracker.R
 import com.guavapay.cryptotracker.data.database.dao.CryptoRatesDao
 import com.guavapay.cryptotracker.domain.model.enums.CryptoType
 import com.guavapay.cryptotracker.domain.useCase.ExchangeRatesUseCase
-import com.guavapay.cryptotracker.presentation.util.Utils.roundFloatTwoDecimal
+import com.guavapay.cryptotracker.domain.useCase.LastSetRangeUseCase
+import com.guavapay.cryptotracker.presentation.manager.RatesManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -24,7 +25,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.min
 
 @AndroidEntryPoint
 class CheckRateService : Service() {
@@ -32,14 +32,13 @@ class CheckRateService : Service() {
     private val serviceNotificationID = 999
     private val warningNotificationID = 888
     private val backgroundScope = CoroutineScope(IO)
+    private val notificationChannelId = "checkRateService"
 
     @Inject
     lateinit var exchangeRatesUseCase: ExchangeRatesUseCase
 
     @Inject
-    lateinit var cryptoRatesDao: CryptoRatesDao
-    private val notificationChannelId = "checkRateService"
-//    private val NOTIFICATION_CHANNEL_ID = "notification_channel"
+    lateinit var lastSetRangeUseCase: LastSetRangeUseCase
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -49,7 +48,6 @@ class CheckRateService : Service() {
         super.onCreate()
 
         startForeground(serviceNotificationID, createNotification())
-        Log.d(TAG, "--------------------333-----------------------------------")
     }
 
     private fun createNotification(): Notification {
@@ -80,11 +78,13 @@ class CheckRateService : Service() {
         backgroundScope.launch {
             while (true) {
                 try {
-                    val btcRate = cryptoRatesDao.getSpecificCrypto(CryptoType.BTC.name)
-                    val ethRate = cryptoRatesDao.getSpecificCrypto(CryptoType.ETH.name)
-                    val xrpRate = cryptoRatesDao.getSpecificCrypto(CryptoType.XRP.name)
+                    val btcRate = lastSetRangeUseCase.execute(CryptoType.BTC.name)
+                    val ethRate = lastSetRangeUseCase.execute(CryptoType.ETH.name)
+                    val xrpRate = lastSetRangeUseCase.execute(CryptoType.XRP.name)
 
-                    val response = exchangeRatesUseCase.execute("cubiex", "btc,eth,xrp")
+                    val response = exchangeRatesUseCase.execute()
+                    RatesManager.sharadFlow.emit(response)
+
                     btcRate?.let {
                         if (ratesChanged(response.btc.value, it.minValue, it.maxValue)) {
                             setNotificationManager(response.btc.unit.name)
@@ -106,10 +106,7 @@ class CheckRateService : Service() {
                     Log.d(TAG, "onStartCommand: ${ethRate?.minValue}  ${ethRate?.maxValue}")
                     Log.d(TAG, "onStartCommand: ${xrpRate?.minValue}  ${xrpRate?.maxValue}")
 
-                    Log.d(
-                        TAG,
-                        "onStartCommand: __________________________________________________________________________"
-                    )
+                    Log.d(TAG, "onStartCommand: __________________________________________________________________________")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -122,8 +119,9 @@ class CheckRateService : Service() {
     }
 
     private fun setNotificationManager(type: String) {
-        val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        mNotifyMgr.notify(warningNotificationID, createWarningNotification(type).build())
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(warningNotificationID, createWarningNotification(type).build())
     }
 
     private val createWarningNotification: (String) -> NotificationCompat.Builder = {
@@ -141,10 +139,5 @@ class CheckRateService : Service() {
             return true
         }
         return false
-    }
-
-    override fun onDestroy() {
-        Log.d(TAG, "onDestroy: --------------------------------------------------")
-        super.onDestroy()
     }
 }

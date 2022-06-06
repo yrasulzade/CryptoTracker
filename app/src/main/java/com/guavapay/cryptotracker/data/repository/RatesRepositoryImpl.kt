@@ -12,8 +12,8 @@ class RatesRepositoryImpl @Inject constructor(
     private val cryptoRatesDao: CryptoRatesDao
 ) :
     RatesRepository {
-    override suspend fun getExchangeRates(query: String, vs_currencies: String): RateResponse {
-        return apiService.getExchangeRates(query, vs_currencies)
+    override suspend fun getExchangeRates(): RateResponse {
+        return apiService.getExchangeRates()
     }
 
     override suspend fun insertCryptoRange(cryptoRange: CryptoRange) {
@@ -22,5 +22,9 @@ class RatesRepositoryImpl @Inject constructor(
 
     override suspend fun getSpecificCrypto(cryptoType: String): CryptoRange? {
         return cryptoRatesDao.getSpecificCrypto(cryptoType)
+    }
+
+    override suspend fun getSpecificCryptoList(cryptoType: String): List<CryptoRange>? {
+        return cryptoRatesDao.getSpecificCryptoList(cryptoType)
     }
 }

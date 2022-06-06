@@ -10,11 +10,26 @@
         <variable
             name="isEmpty"
             type="Boolean" />
+
+        <variable
+            name="viewModel"
+            type="com.guavapay.cryptotracker.presentation.ui.fragment.rates_history.RatesHistoryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewModel.backArrowClick()}"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="8dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -23,7 +38,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/back_arrow"
             tools:listitem="@layout/item_rate" />
 
         <TextView

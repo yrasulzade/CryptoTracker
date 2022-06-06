@@ -17,10 +17,6 @@ abstract class BaseViewModel<INTENT : ViewIntent, STATE : ViewState> :
             return mState
         }
 
-    fun launchOnUI(block: suspend CoroutineScope.() -> Unit) {
-        viewModelScope.launch { block() }
-    }
-
     final override fun dispatchIntent(intent: INTENT) {
         handleIntent(intent)
     }
@@ -29,13 +25,8 @@ abstract class BaseViewModel<INTENT : ViewIntent, STATE : ViewState> :
 
     private val loading = MutableLiveData<Boolean>()
     private val message = MutableLiveData<Int>()
-    val errorLiveData = MutableLiveData<Throwable>()
     val loadingState: LiveData<Boolean>
         get() = loading
-
-    fun getErrorLiveData(): LiveData<Throwable> {
-        return errorLiveData
-    }
 
     fun loading(isLoading: Boolean) {
         loading.value = isLoading

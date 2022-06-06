@@ -1,10 +1,8 @@
 package com.guavapay.cryptotracker.presentation.ui.fragment.rates_history
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.guavapay.cryptotracker.R
 import com.guavapay.cryptotracker.data.database.models.CryptoRange
 import com.guavapay.cryptotracker.databinding.FragmentRatesRangeHistoryBinding
@@ -16,9 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class RateHistoryFragment :
     BaseMviFragment<RatesHistoryIntent, RatesHistoryState, FragmentRatesRangeHistoryBinding, RatesHistoryViewModel>() {
     private lateinit var adapter: RatesHistoryAdapter
-    private val ratesList = ArrayList<CryptoRange?>()
     private lateinit var viewModel: RatesHistoryViewModel
-    private val TAG = "RateHistoryFragment"
 
     override fun getViewModel(): RatesHistoryViewModel {
         viewModel = ViewModelProvider(this)[RatesHistoryViewModel::class.java]
@@ -30,6 +26,7 @@ class RateHistoryFragment :
     }
 
     override fun initUI() {
+        viewDataBinding.viewModel = viewModel
         initRecyclerView()
     }
 
@@ -40,25 +37,21 @@ class RateHistoryFragment :
 
     override fun render(state: RatesHistoryState) {
         when (state) {
-            is RatesHistoryState.RatesList -> addRates(state.ranges)
+            is RatesHistoryState.RatesList -> submitList(state.ranges)
             is RatesHistoryState.PopBackFragment -> findNavController().popBackStack()
         }
     }
 
     private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
-        adapter = RatesHistoryAdapter(ratesList, requireContext())
-        layoutManager.orientation = RecyclerView.VERTICAL
-        viewDataBinding.recyclerView.adapter = adapter
-        viewDataBinding.recyclerView.layoutManager = layoutManager
+        adapter = RatesHistoryAdapter()
+        viewDataBinding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@RateHistoryFragment.adapter
+        }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun addRates(rates: List<CryptoRange>?) {
-        rates?.let {
-            ratesList.addAll(it)
-            viewDataBinding.isEmpty = it.isEmpty()
-        }
-        adapter.notifyDataSetChanged()
+    private fun submitList(ranges: List<CryptoRange>?) {
+        adapter.submitList(ranges)
+        viewDataBinding.isEmpty = ranges?.isEmpty()
     }
 }
