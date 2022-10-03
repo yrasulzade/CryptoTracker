@@ -6,5 +6,4 @@ import com.guavapay.cryptotracker.presentation.base.mvi_base.ViewState
 sealed class RatesState : ViewState {
     data class RatesList(val rates: ArrayList<Rate>) : RatesState()
     data class ShowRangeDialog(val range: Rate) : RatesState()
-    object PopBackFragment : RatesState()
 }

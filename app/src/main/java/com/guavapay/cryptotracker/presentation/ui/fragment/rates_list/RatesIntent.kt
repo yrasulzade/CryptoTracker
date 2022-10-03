@@ -5,5 +5,4 @@ import com.guavapay.cryptotracker.presentation.base.mvi_base.ViewIntent
 
 sealed class RatesIntent : ViewIntent {
     data class InsertRange(val range: CryptoRange) : RatesIntent()
-    object PopBackFragment : RatesIntent()
 }

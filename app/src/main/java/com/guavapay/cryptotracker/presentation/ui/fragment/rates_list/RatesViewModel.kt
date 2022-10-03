@@ -1,6 +1,5 @@
 package com.guavapay.cryptotracker.presentation.ui.fragment.rates_list
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.guavapay.cryptotracker.data.database.models.CryptoRange
 import com.guavapay.cryptotracker.domain.model.enums.CryptoType
@@ -34,10 +33,6 @@ class RatesViewModel @Inject constructor(
                 rates.add(Rate(CryptoType.XRP.name, it.xrp.value.roundFloatTwoDecimal()))
 
                 mState.value = RatesState.RatesList(rates)
-                Log.d(
-                    "RatesViewModel",
-                    "fetchRates: ${it.btc} ${it.eth.value.roundFloatTwoDecimal()} ${it.xrp.value.roundFloatTwoDecimal()}"
-                )
             }
         }
     }
@@ -57,7 +52,6 @@ class RatesViewModel @Inject constructor(
     override fun handleIntent(intent: RatesIntent) {
         when (intent) {
             is RatesIntent.InsertRange -> saveCryptoRange(intent.range)
-            is RatesIntent.PopBackFragment -> mState.postValue(RatesState.PopBackFragment)
         }
     }
 }

@@ -8,7 +8,6 @@ import android.util.Log
 import com.guavapay.cryptotracker.presentation.services.CheckRateService
 
 object ServiceUtil {
-    private val TAG = "ServiceUtil"
 
     private fun isServiceRunning(
         context: Context,
@@ -27,7 +26,6 @@ object ServiceUtil {
     fun startCheckRateService(context: Context) {
 
         if (!isServiceRunning(context, CheckRateService::class.java)) {
-            Log.d("ServiceUtil", "start Service: ")
 
             val intent = Intent(context,CheckRateService::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -37,8 +35,6 @@ object ServiceUtil {
                 context.startService(intent)
             }
 
-        } else {
-            Log.d(TAG, " service is already running")
         }
     }
 }

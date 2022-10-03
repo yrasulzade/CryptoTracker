@@ -31,10 +31,6 @@ abstract class BaseActivity<T : ViewDataBinding?, V : ViewModel> :
         return this.mViewDataBinding!!
     }
 
-    open fun getViewModel2(): V {
-        return this.mViewModel!!
-    }
-
     open fun performDataBinding() {
         mViewDataBinding = DataBindingUtil.setContentView<T>(this, getLayoutId())
 
@@ -52,11 +48,6 @@ abstract class BaseActivity<T : ViewDataBinding?, V : ViewModel> :
         }
     }
 
-    open fun showKeyboard() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
-    }
-
     open fun showLoading() {
         hideLoading()
         mProgressDialog = showLoadingDialog(this)
@@ -67,15 +58,6 @@ abstract class BaseActivity<T : ViewDataBinding?, V : ViewModel> :
             mProgressDialog!!.cancel()
         }
     }
-
-    open fun showMessage(message: String) {
-        val parentLayout = findViewById<View>(android.R.id.content)
-        val snackBar = Snackbar.make(parentLayout,message, Snackbar.LENGTH_LONG)
-        val snackTextView = snackBar.view.findViewById<View>(R.id.snackbar_text) as TextView
-        snackTextView.maxLines = 10 // changes default snackBar max length, so that it can show EDV warnings fully
-        snackBar.show()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -12,7 +12,7 @@ pluginManagement {
                 useModule("com.google.dagger:hilt-android-gradle-plugin:2.42")
             }
             if (requested.id.id == 'androidx.navigation') {
-                useModule("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5")
+                useModule("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.2")
             }
         }
     }

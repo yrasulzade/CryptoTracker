@@ -12,7 +12,7 @@ interface CryptoRatesDao {
     suspend fun insert(cryptoRange: CryptoRange)
 
     @Query("SELECT * FROM crypto_table WHERE cryptoName LIKE :cryptoName ORDER BY id DESC")
-    fun getSpecificCrypto(cryptoName: String): CryptoRange?
+    fun getLatestCryptoRange(cryptoName: String): CryptoRange?
 
     @Query("SELECT * FROM crypto_table WHERE cryptoName LIKE :cryptoName ORDER BY id DESC")
     fun getSpecificCryptoList(cryptoName: String): List<CryptoRange>?

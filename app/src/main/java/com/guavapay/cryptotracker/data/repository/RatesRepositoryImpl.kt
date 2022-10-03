@@ -20,8 +20,8 @@ class RatesRepositoryImpl @Inject constructor(
         return cryptoRatesDao.insert(cryptoRange)
     }
 
-    override suspend fun getSpecificCrypto(cryptoType: String): CryptoRange? {
-        return cryptoRatesDao.getSpecificCrypto(cryptoType)
+    override suspend fun getLatestCryptoRange(cryptoType: String): CryptoRange? {
+        return cryptoRatesDao.getLatestCryptoRange(cryptoType)
     }
 
     override suspend fun getSpecificCryptoList(cryptoType: String): List<CryptoRange>? {

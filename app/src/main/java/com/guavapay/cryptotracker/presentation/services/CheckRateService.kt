@@ -13,7 +13,6 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.guavapay.cryptotracker.R
-import com.guavapay.cryptotracker.data.database.dao.CryptoRatesDao
 import com.guavapay.cryptotracker.domain.model.enums.CryptoType
 import com.guavapay.cryptotracker.domain.useCase.ExchangeRatesUseCase
 import com.guavapay.cryptotracker.domain.useCase.LastSetRangeUseCase
@@ -100,13 +99,6 @@ class CheckRateService : Service() {
                             setNotificationManager(response.xrp.unit.name)
                         }
                     }
-
-                    Log.d(TAG, "onStartCommand: ${response.btc} ${response.eth} ${response.xrp}")
-                    Log.d(TAG, "onStartCommand: ${btcRate?.minValue}  ${btcRate?.maxValue}")
-                    Log.d(TAG, "onStartCommand: ${ethRate?.minValue}  ${ethRate?.maxValue}")
-                    Log.d(TAG, "onStartCommand: ${xrpRate?.minValue}  ${xrpRate?.maxValue}")
-
-                    Log.d(TAG, "onStartCommand: __________________________________________________________________________")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

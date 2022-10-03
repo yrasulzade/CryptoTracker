@@ -1,7 +1,6 @@
 package com.guavapay.cryptotracker.presentation.ui.dialog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import com.guavapay.cryptotracker.data.database.models.CryptoRange
 import com.guavapay.cryptotracker.databinding.DialogSetRangeBinding
 import com.guavapay.cryptotracker.domain.useCase.LastSetRangeUseCase
 import com.guavapay.cryptotracker.presentation.base.BaseDialogFragment
-import com.guavapay.cryptotracker.presentation.util.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -29,7 +27,6 @@ class DialogSetRange(
     @Inject
     lateinit var lastSetRangeUseCase: LastSetRangeUseCase
     private lateinit var binding: DialogSetRangeBinding
-    private val TAG = "DialogSetRange"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +48,6 @@ class DialogSetRange(
                 val range = CryptoRange(type, minValue.toDouble(), maxValue.toDouble())
                 cryptoRange.invoke(range)
 
-                Log.d(TAG, "onCreateView: ${minValue.toDouble()} ${maxValue.toDouble()}")
                 dismiss()
             }
         }
@@ -74,8 +70,6 @@ class DialogSetRange(
             crypto?.maxValue?.let {
                 binding.maxValue.setText(it.toString())
             }
-
-            Log.d(TAG, "onCreateView: ${crypto?.minValue} ${crypto?.maxValue} ")
         }
     }
 }
